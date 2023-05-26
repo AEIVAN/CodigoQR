@@ -1,5 +1,5 @@
 export class ResponseDTO{
     msg !: string ; 
-	object !: any; 
+	body !: any; 
 	status !: boolean;
 }

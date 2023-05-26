@@ -28,18 +28,18 @@ export class ApiServiceService {
  
   downLoadDocument(id:String) {
     console.log("getInformation " + id);
-    return this.http.get(this.baseURL + '/qr/file/downLoadDocument?id='+id, { responseType : 'blob' })
+    return this.http.get(this.baseURL + '/file/downLoadDocument?id='+id, { responseType : 'blob' })
   }
 
-  getQrDocumentGeneralId(id:String): Observable<QrDocumentGeneral> {
+  getQrDocumentGeneralId(id:String): Observable<ResponseDTO> {
     console.log("getInformation " + id);
-    return this.http.post<QrDocumentGeneral>(this.baseURL+'/qr/file/getQrDocumentGeneralId?id='+id, {headers:this.headers})
+    return this.http.post<ResponseDTO>(this.baseURL+'/file/getQrDocumentGeneralId?id='+id, {headers:this.headers})
   }
   validaContrasenia(id:String,contrasenia:String):Observable<ResponseDTO> {
     console.log("getInformation " + id);
     console.log("contrasenia " + contrasenia);
     const headerss = { 'content-type': 'application/json'}  
     //return this.http.get(this.baseURL + 'test?tes='+id, {'headers':headers})
-    return this.http.post<ResponseDTO>(this.baseURL + '/qr/file/getValidaContrasenia?id='+id+'&contrasenia='+contrasenia, {headers:headerss})
+    return this.http.post<ResponseDTO>(this.baseURL + '/file/getValidaContrasenia?id='+id+'&contrasenia='+contrasenia, {headers:headerss})
   }
 }

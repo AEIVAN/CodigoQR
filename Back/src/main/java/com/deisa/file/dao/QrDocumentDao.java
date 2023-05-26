@@ -12,6 +12,7 @@ import com.deisa.file.dto.QrDocumentGeneral;
 public interface QrDocumentDao {
 	public String exisDocumento(QrDocument qrDocument) throws Exception; 
 	public List<QrDocument> getQrDocuments(QrDocumentGeneral qrDocumentGeneral) throws Exception; 
+	public List<QrDocument> getQrDocumentsById(QrDocumentGeneral qrDocumentGeneral) throws Exception; 
 	public QrDocument getQrDocument(QrDocument qrDocument) throws Exception; 
 	public QrDocument getQrDocumentById(String id) throws Exception; 
 	public QrDocument downLoadDocument(String id) throws Exception;

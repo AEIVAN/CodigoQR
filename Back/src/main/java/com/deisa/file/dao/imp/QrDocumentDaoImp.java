@@ -35,6 +35,21 @@ public class QrDocumentDaoImp implements QrDocumentDao {
 		}
 		
 	}
+	@Override
+	public List<QrDocument> getQrDocumentsById(QrDocumentGeneral qrDocumentGeneral) throws Exception {
+		System.out.println("getQrDocuments");
+		String sql = "SELECT * FROM documento WHERE departamento = ? AND documento = ? AND  numero  = ? AND estado = 'Disponible' AND tipo = ? ";
+		Object[] params = {qrDocumentGeneral.getDepartamento(), qrDocumentGeneral.getDocumento(), qrDocumentGeneral.getNumero(), qrDocumentGeneral.getTipo()}; 
+		try {
+			List<QrDocument> response =  jdbcTemplate.query(sql, params,new BeanPropertyRowMapper<QrDocument>(QrDocument.class)); 
+			return response;
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e.toString());
+			return new ArrayList<QrDocument>(); 
+		}
+		
+	}
 
 	@Override
 	public QrDocument getQrDocument(QrDocument qrDocument) throws Exception {
@@ -77,7 +92,7 @@ public class QrDocumentDaoImp implements QrDocumentDao {
 	@Override
 	public boolean insertQrDocument(QrDocument qrDocument) throws Exception {
 		System.out.println("insertQrDocument");
-		String sql = "INSERT INTO documento (id,departamento,documento,numero,razon_social,nombre,extension,estado,contrasenia) values (?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO documento (id,tipo,departamento,documento,numero,razon_social,nombre,extension,estado,contrasenia) values (?,?,?,?,?,?,?,?,?,?)";
 		Object[] params = {
 				qrDocument.getId(),
 				qrDocument.getDepartamento(),

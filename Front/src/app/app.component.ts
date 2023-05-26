@@ -114,8 +114,8 @@ export class AppComponent implements OnInit {
     this.flagDescarga = true ; 
     this.apiService.validaContrasenia(this.idSeleccionado, this.contraseniaFormGroup.controls['contrasenia'].value.toString()).subscribe(
       data => {
-        if (data.object) {
-          if (!data.object.toString().includes("Invalido")){
+        if (data.body) {
+          if (!data.body.toString().includes("Invalido")){
             this.contrasenia = true ; 
             //console.log(this.exampleModalCenter.nativeElement);
             this.descargar(this.idSeleccionado); 
@@ -168,6 +168,8 @@ export class AppComponent implements OnInit {
         }
         else{
           this.descargaFalta = true;
+          this.flagDescarga = false ; 
+          document.getElementById("ModalClose")?.click();
         }
 
       },
@@ -184,7 +186,7 @@ export class AppComponent implements OnInit {
     console.log("this.id " + this.id); // Print the parameter to the console. 
     this.apiService.getQrDocumentGeneralId(id).subscribe(
       data => {
-        this.qrDocumentGeneral = data;
+        this.qrDocumentGeneral = data.body;
         this.qrDocumentSelectedList = [];
         this.qrDocumentGeneral.qrDocumentosInfo.forEach(element => {
           this.qrDocumentSelected = new QrDocumentSelected();

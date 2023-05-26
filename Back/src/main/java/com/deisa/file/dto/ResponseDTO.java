@@ -2,7 +2,7 @@ package com.deisa.file.dto;
 
 public class ResponseDTO {
 	private String msg; 
-	private Object object; 
+	private Object body; 
 	private Boolean status;
 	
 
@@ -12,11 +12,11 @@ public class ResponseDTO {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public Object getObject() {
-		return object;
+	public Object getBody() {
+		return body;
 	}
-	public void setObject(Object object) {
-		this.object = object;
+	public void setBody(Object body) {
+		this.body = body;
 	}
 	public Boolean getStatus() {
 		return status;
@@ -27,16 +27,16 @@ public class ResponseDTO {
 	
 	@Override
 	public String toString() {
-		return "response [msg=" + msg + ", object=" + object + ", status=" + status + "]";
+		return "response [msg=" + msg + ", object=" + body + ", status=" + status + "]";
 	}
-	public ResponseDTO(String msg, Object object, Boolean status) {
+	public ResponseDTO(String msg, Object body, Boolean status) {
 		this.msg = msg;
-		this.object = object;
+		this.body = body;
 		this.status = status;
 	}
 	public ResponseDTO() {
 		this.msg = "";
-		this.object = null; 
+		this.body = null; 
 		this.status = false;
 	}
 	

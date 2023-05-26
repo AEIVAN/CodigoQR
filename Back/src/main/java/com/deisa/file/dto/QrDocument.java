@@ -2,6 +2,7 @@ package com.deisa.file.dto;
 
 public class QrDocument {
 	private String id ;
+	private String tipo ; 
 	private String departamento; 
 	private String documento ; 
 	private String numero ; 
@@ -19,6 +20,12 @@ public class QrDocument {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	public String getDepartamento() {
 		return departamento;
@@ -94,17 +101,18 @@ public class QrDocument {
 	}
 	@Override
 	public String toString() {
-		return "QrDocument [id=" + id + ", departamento=" + departamento + ", documento=" + documento + ", numero="
-				+ numero + ", razonSocial=" + razonSocial + ", nombre=" + nombre + ", extension=" + extension + ", qr="
-				+ qr + ", file=" + file + ", url=" + url + ", contrasenia=" + contrasenia + ", estado=" + estado
-				+ ", fecha=" + fecha + "]";
+		return "QrDocument [id=" + id + ", tipo=" + tipo + ", departamento=" + departamento + ", documento=" + documento
+				+ ", numero=" + numero + ", razonSocial=" + razonSocial + ", nombre=" + nombre + ", extension="
+				+ extension + ", qr=" + qr + ", file=" + file + ", url=" + url + ", contrasenia=" + contrasenia
+				+ ", estado=" + estado + ", fecha=" + fecha + "]";
 	}
 	
-	public QrDocument(String id, String departamento, String documento, String numero, String razonSocial,
+	public QrDocument(String id, String tipo, String departamento, String documento, String numero, String razonSocial,
 			String nombre, String extension, String qr, String file, String url, String contrasenia, String estado,
 			String fecha) {
 		super();
 		this.id = id;
+		this.tipo = tipo;
 		this.departamento = departamento;
 		this.documento = documento;
 		this.numero = numero;
@@ -117,11 +125,12 @@ public class QrDocument {
 		this.contrasenia = contrasenia;
 		this.estado = estado;
 		this.fecha = fecha;
-	} 
+	}
     
 	public QrDocument() {
 		super();
 		this.id = "";
+		this.tipo = "";
 		this.departamento = "";
 		this.documento = "";
 		this.numero = "";
@@ -134,6 +143,5 @@ public class QrDocument {
 		this.contrasenia = "";
 		this.estado = "";
 		this.fecha = "";
-	} 
-	
+	}
 }
