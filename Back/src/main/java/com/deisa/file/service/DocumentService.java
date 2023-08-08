@@ -4,10 +4,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.deisa.file.dto.Documento;
+import com.deisa.file.dto.Email;
 import com.deisa.file.dto.InformationDocuments;
 import com.deisa.file.dto.QrDocument;
 import com.deisa.file.dto.QrDocumentGeneral;
 import com.deisa.file.dto.ResponseDTO;
+
 @Repository
 public interface DocumentService {
 //	public Documento getQr(Documento documento) throws Exception; 
@@ -21,9 +23,13 @@ public interface DocumentService {
 	public ResponseDTO getQrDocument(QrDocument qrDocument); 
 	public byte[] downLoadDocument(String id); 
 	public ResponseDTO postQrDocument(QrDocument qrDocument); 
-	public ResponseDTO saveQrDocumentId(MultipartFile file, String id, String extension); 
+	public ResponseDTO saveQrDocumentId(MultipartFile file, String id, String extension, String user); 
 	public ResponseDTO saveQrDocument(MultipartFile file, QrDocument qrDocument); 
 	public ResponseDTO getCodeQr(String id); 
 	public ResponseDTO getQrDocumentGeneralId(String id); 
-	public ResponseDTO getValidaContrasenia(String id, String contrasenia); 
+	public ResponseDTO getValidaContrasenia(String id, String contrasenia, String user, String order); 
+	public ResponseDTO sendEmail (Email email) ; 
+	public ResponseDTO addDownloads (QrDocument qrDocument) ; 
+
+	public ResponseDTO getPermissions () ; 
 }

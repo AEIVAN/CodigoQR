@@ -3,25 +3,38 @@ package com.deisa.file.bo;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.InputStreamSource;
+//import org.springframework.mail.SimpleMailMessage;
+//import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.deisa.file.dao.DocumentDao;
+import com.deisa.file.dao.EmailDao;
 import com.deisa.file.dao.InformationDocumentDao;
+import com.deisa.file.dao.PermissionDao;
 import com.deisa.file.dao.QrDocumentDao;
 import com.deisa.file.dao.QrDocumentGeneralDao;
+import com.deisa.file.dto.Email;
+import com.deisa.file.dto.LogRecordDTO;
+import com.deisa.file.dto.Permission;
 import com.deisa.file.dto.QrDocument;
 import com.deisa.file.dto.QrDocumentGeneral;
-import com.deisa.file.dto.ResponseDTO;
 import com.deisa.file.service.QRCodeService;
 import com.deisa.file.utils.GenerateAlphaNumericString;
 
+
+
 @Service
 public class DocumentServiceBo {
+	
 	@Autowired
 	QRCodeService qRCodeService;
 	@Autowired
@@ -36,18 +49,23 @@ public class DocumentServiceBo {
 	InformationDocumentDao informationDocumentDao;
 	@Autowired
 	DocumentServiceBo documentServiceBo;
+	@Autowired
+	EmailDao emailDao;
+	@Autowired
+	PermissionDao permissionDao;
+
 
 //	String urlBase = "http://localhost:4200/" ;
 // 	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\" ; 
 // 	String diagonal = "\\"; 
 
-	String urlBase = "http://localhost:8080/" ;
- 	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\" ; 
- 	String diagonal = "\\"; 
+//	String urlBase = "http://localhost:8080/";
+//	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\";
+//	String diagonal = "\\";
 
-//	String urlBase = "http://reportesdeisa.ddns.net:8081/";
-//	String dirPathBase = "/home/server/Documents/Deisa/";
-//	String diagonal = "/";
+	String urlBase = "http://reportesdeisa.ddns.net:8081/";
+	String dirPathBase = "/home/server/Documents/Deisa/";
+	String diagonal = "/";
 
 //	String urlBase = "http://52.23.232.199:8080/" ;
 //    String dirPathBase = "C:\\Users\\Administrator\\Documents\\Deisa\\" ;
@@ -116,7 +134,7 @@ public class DocumentServiceBo {
 
 				qrDocument = qrDocumentDao.downLoadDocument(id);
 				String dirPath = dirPathBase + qrDocument.getDepartamento() + diagonal + qrDocument.getDocumento()
-						+ diagonal + qrDocument.getNumero() + diagonal + qrDocument.getNombre() + "."
+						+ diagonal + qrDocument.getNumero() + diagonal + qrDocument.getTipo() + diagonal + qrDocument.getNombre() + "."
 						+ qrDocument.getExtension();
 				System.out.println("dirPath " + dirPath);
 				File file = new File(dirPath);
@@ -144,11 +162,22 @@ public class DocumentServiceBo {
 						return null;
 					i++;
 				}
-				if (!qrDocumentDao.insertQrDocument(qrDocument))
+				if (qrDocumentDao.insertQrDocument(qrDocument)) {
+					LogRecordDTO logRecordDTO = new LogRecordDTO(qrDocument.getUsuario(),"Insert Document",
+							qrDocument.getNumero(), qrDocument.getId(), qrDocument.toString());
+					qrDocumentDao.insertLog(logRecordDTO);
+				} else {
 					return null;
+				}
 			} else {
-				if (!qrDocumentDao.updateQrDocument(qrDocument))
+				if (qrDocumentDao.updateQrDocument(qrDocument)) {
+					LogRecordDTO logRecordDTO = new LogRecordDTO(qrDocument.getUsuario(), "Update Document",
+							qrDocument.getNumero(), qrDocument.getId(), qrDocument.toString());
+					qrDocumentDao.insertLog(logRecordDTO);
+				} else {
 					return null;
+
+				}
 			}
 
 			qrDocument.setUrl(urlBase + "deisa/?id=" + qrDocument.getId());
@@ -161,7 +190,7 @@ public class DocumentServiceBo {
 		}
 	}
 
-	public Object saveQrDocumentId(MultipartFile file, String id, String extension) throws Exception {
+	public Object saveQrDocumentId(MultipartFile file, String id, String extension, String user) throws Exception {
 		try {
 			System.out.println("cargaDocumento");
 			QrDocument qrDocumentResponse = qrDocumentDao.getQrDocumentById(id);
@@ -174,7 +203,7 @@ public class DocumentServiceBo {
 						+ qrDocumentResponse.getDocumento() + diagonal +
 						// String dirPath =
 						// "C:\\Users\\Administrator\\Documents\\Deisa\\"+documento.getDepartamento()+diagonal+documento.getDocumento()+diagonal+
-						qrDocumentResponse.getNumero() + diagonal + qrDocumentResponse.getTipo() + diagonal ;
+						qrDocumentResponse.getNumero() + diagonal + qrDocumentResponse.getTipo() + diagonal;
 				String filePath = dirPath + localFileName;
 				System.out.println("filePath " + filePath);
 				File localFile = new File(filePath);
@@ -183,6 +212,9 @@ public class DocumentServiceBo {
 					imagePath.mkdirs();
 				}
 				file.transferTo(localFile);
+				LogRecordDTO logRecordDTO = new LogRecordDTO(user, "File Save", qrDocumentResponse.getNumero(),
+						qrDocumentResponse.getId(), qrDocumentResponse.toString());
+				qrDocumentDao.insertLog(logRecordDTO);
 				return "OK";
 			}
 		} catch (Exception e) {
@@ -203,7 +235,7 @@ public class DocumentServiceBo {
 					+ diagonal +
 					// String dirPath =
 					// "C:\\Users\\Administrator\\Documents\\Deisa\\"+documento.getDepartamento()+diagonal+documento.getDocumento()+diagonal+
-					qrDocument.getNumero() + diagonal  + qrDocument.getTipo() + diagonal ;
+					qrDocument.getNumero() + diagonal + qrDocument.getTipo() + diagonal;
 			String filePath = dirPath + localFileName;
 			System.out.println("filePath " + filePath);
 			File localFile = new File(filePath);
@@ -212,6 +244,10 @@ public class DocumentServiceBo {
 				imagePath.mkdirs();
 			}
 			file.transferTo(localFile);
+
+			LogRecordDTO logRecordDTO = new LogRecordDTO(qrDocument.getUsuario(), "File Save", qrDocument.getNumero(),
+					qrDocument.getId(), qrDocument.toString());
+			qrDocumentDao.insertLog(logRecordDTO);
 
 			qrDocument.setId(qrDocumentDao.exisDocumento(qrDocument));
 			if (qrDocument.getId() == "") {
@@ -224,11 +260,22 @@ public class DocumentServiceBo {
 						return null;
 					i++;
 				}
-				if (!qrDocumentDao.insertQrDocument(qrDocument))
+				if (qrDocumentDao.insertQrDocument(qrDocument)) {
+					logRecordDTO = new LogRecordDTO(qrDocument.getUsuario(), "Insert Document", qrDocument.getNumero(),
+							qrDocument.getId(), qrDocument.toString());
+					qrDocumentDao.insertLog(logRecordDTO);
+				} else {
 					return null;
+				}
 			} else {
-				if (!qrDocumentDao.updateQrDocument(qrDocument))
+				if (qrDocumentDao.updateQrDocument(qrDocument)) {
+					logRecordDTO = new LogRecordDTO(qrDocument.getUsuario(), "Update Document", qrDocument.getNumero(),
+							qrDocument.getId(), qrDocument.toString());
+					qrDocumentDao.insertLog(logRecordDTO);
+				} else {
 					return null;
+
+				}
 			}
 
 			qrDocument.setUrl(urlBase + "deisa/?id=" + qrDocument.getId());
@@ -271,12 +318,49 @@ public class DocumentServiceBo {
 
 	}
 
-	public Object getValidaContrasenia(String id, String contrasenia) throws Exception {
+	public Object getValidaContrasenia(String id, String contrasenia, String user, String order) throws Exception {
 		try {
+			LogRecordDTO logRecordDTO;
+			String nombre = ""; 
+			QrDocument qrDocument= qrDocumentDao.getQrDocumentById(id); 
 			if (qrDocumentDao.getValidaContrasenia(id, contrasenia)) {
+				logRecordDTO = new LogRecordDTO(user, "Valid Password Cliente", order, id,
+						"id = " + id + " contrasenia = " + contrasenia + " user = " + user + " order = " + order);
+				qrDocumentDao.insertLog(logRecordDTO);
+				if (qrDocument.getDescargar()>0) {
+					qrDocument.setDescargar(qrDocument.getDescargar() -1 );
+					if(qrDocumentDao.updateDownloads(qrDocument)) {
+						logRecordDTO = new LogRecordDTO(user, "Consume Descarga", order, id,
+								"id = " + id + " descargas = " + qrDocument.getDescargar() + " user = " + user + " order = " + order);
+						qrDocumentDao.insertLog(logRecordDTO);
+						return  "Valido";
+					}
+					else {
+						logRecordDTO = new LogRecordDTO(user, "No Consume Descarga", order, id,
+								"id = " + id + " descargas = " + qrDocument.getDescargar() + " user = " + user + " order = " + order);
+						qrDocumentDao.insertLog(logRecordDTO);
+						return "Error";
+					}
+				}
+				else
+				{
+					logRecordDTO = new LogRecordDTO(user, "Sin Descargas", order, id,
+							"id = " + id + " descargas = " + qrDocument.getDescargar() + " user = " + user + " order = " + order);
+					qrDocumentDao.insertLog(logRecordDTO);
+					return "Descargas"; 
+				}
+			}
+			nombre = qrDocumentDao.getValidaContraseniaPermiso(contrasenia,qrDocument);
+			if(nombre.trim()!="") {
+				logRecordDTO = new LogRecordDTO(user, "Valid Password Deisa", order, id,
+						"id = " + id + " contrasenia = " + contrasenia + " user = " + user.replace("Cliente", nombre) + "order = " + order);
+				qrDocumentDao.insertLog(logRecordDTO);
 				return "Valido";
 			}
-			return "Invalido";
+				logRecordDTO = new LogRecordDTO(user, "Invalid Password", order, id,
+						"id = " + id + " contrasenia = " + contrasenia + " user = " + user + "order = " + order);
+				qrDocumentDao.insertLog(logRecordDTO);
+				return "Invalido";
 		} catch (Exception e) {
 			throw (new Exception(
 					"*** Class " + this.getClass().getName() + " Method  getValidaContrasenia ***  Excepcion : " + e));
@@ -296,10 +380,15 @@ public class DocumentServiceBo {
 		qrDocument.setUrl(urlBase + "deisa/?id=" + qrDocument.getId());
 		return urlBase + "deisa/?id=" + qrDocument.getId();
 	}
+	
+	private String getUrl(String idQr) {
+		return urlBase + "deisa/?id=" + idQr; 
+	}
 
 	private String existFIle(QrDocument qrDocument) {
 		String dirPath = dirPathBase + qrDocument.getDepartamento() + diagonal + qrDocument.getDocumento() + diagonal
-				+ qrDocument.getNumero() + diagonal + qrDocument.getTipo() + diagonal + qrDocument.getNombre() + "." + qrDocument.getExtension();
+				+ qrDocument.getNumero() + diagonal + qrDocument.getTipo() + diagonal + qrDocument.getNombre() + "."
+				+ qrDocument.getExtension();
 		File file = new File(dirPath);
 		if (file.exists()) {
 			return "Si";
@@ -307,5 +396,51 @@ public class DocumentServiceBo {
 			return "No";
 		}
 	}
+
+	public Object sendEmail(Email email) throws Exception {
+		try {
+			if (qrDocumentDao.changePassword(email)) {
+				LogRecordDTO logRecordDTO = new LogRecordDTO(email.getUsuario(), "Change Password", email.getOrden(),
+						email.getIdQr(), email.toString());
+				qrDocumentDao.insertLog(logRecordDTO);
+				String [] emails = {email.getCorreo()}; 
+				QrDocument qrDocument= qrDocumentDao.getQrDocumentById(email.getIdQr()); 
+				String msg = emailDao.emailPassword(emails, email.getOrden(), qrDocument.getNombre(), getUrl(email.getIdQr()), email.getContrasenia(), qrDocument.getDescargar());
+				logRecordDTO = new LogRecordDTO(email.getUsuario(), "Send Email", email.getOrden(), email.getIdQr(),
+						"["+email.getCorreo()+"] " + msg);
+				qrDocumentDao.insertLog(logRecordDTO);
+				return "Se envio el correo";
+			}
+			return false;
+		} catch (Exception e) {
+			throw (new Exception(
+					"*** Class " + this.getClass().getName() + " Method  getValidaContrasenia ***  Excepcion : " + e));
+		}
+	}
+	
+	public Object addDownloads (QrDocument qrDocument) throws Exception {
+		try {
+			if(qrDocumentDao.updateDownloads(qrDocument)) {
+				return "Se actualizo el numero de  descargas" ; 
+			}else {
+				return "No se pudo actualizar el numero de  descargas"; 
+			}
+		}
+		catch (Exception e) {
+			throw (new Exception(
+					"*** Class " + this.getClass().getName() + " Method  getValidaContrasenia ***  Excepcion : " + e));
+		} 
+	}
+	
+	public Object getPermissions () throws Exception {
+		try {
+			return permissionDao.getPermissions(); 	
+		}
+		catch (Exception e) {
+			throw (new Exception(
+					"*** Class " + this.getClass().getName() + " Method  getValidaContrasenia ***  Excepcion : " + e));
+		} 
+	}
+	
 
 }

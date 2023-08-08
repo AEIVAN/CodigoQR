@@ -1,7 +1,11 @@
 package com.deisa.file.api;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.deisa.file.config.EmailSender;
 import com.deisa.file.dto.Contact;
 import com.deisa.file.dto.Documento;
+import com.deisa.file.dto.Email;
 import com.deisa.file.dto.InformationDocuments;
 import com.deisa.file.dto.QrDocument;
 import com.deisa.file.dto.QrDocumentGeneral;
@@ -32,60 +38,9 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "", description = "")
 @RequestMapping("/file")
 public class ContactsApi {
+	
 	@Autowired
 	DocumentService documentService;
-
-//	@ApiOperation("Obtiene Qr")
-//	@PostMapping(value = "/getQr")
-//	public Documento getQr(@RequestBody final Documento documento) {
-//		System.out.println("getQr");
-//		try {
-//			return documentService.getQr(documento);
-//		} catch (Exception e) {
-//			System.out.println("Error : " + e);
-//			return null;
-//		}
-//	}
-//
-//	@ApiOperation("Carga Documento")
-//	@PostMapping(value = "/setDocument")
-//	public String cargaDocumento(@RequestPart("file") MultipartFile file, @RequestPart("id") String id,
-//			@RequestPart("extension") String extension) {
-//		System.out.println("cargaDocumento");
-//		try {
-//			return documentService.cargaDocumento(file, id, extension);
-//		} catch (Exception e) {
-//			System.out.println("Error : " + e);
-//			return "Error";
-//		}
-//	}
-//
-//	@ApiOperation("Obtiene informacion")
-//	@PostMapping(value = "/getInformation")
-//	public InformationDocuments getInformation(@RequestParam("id") String id) {
-//		System.out.println("getInformation");
-//		try {
-//			return documentService.getInfotmation(id);
-//		} catch (Exception e) {
-//			System.out.println("Error : " + e);
-//			return null;
-//		}
-//	}
-//
-//	@ApiOperation("Qr Documento")
-//	@GetMapping(value = "/getQrDocumento")
-//	public byte[] getDocument(@RequestParam("id") String id) {
-//		System.out.println("getDocument");
-//		try {
-//			return documentService.getDocument(id);
-//		} catch (Exception e) {
-//			System.out.println("Error : " + e);
-//			return null;
-//		}
-//	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	/*
 	 * Sirve para comprobar que este sirviendo el servicio
 	 */
@@ -117,6 +72,7 @@ public class ContactsApi {
 	/*
 	 * Obtiene la informacion general de una orden con la informacion de sus
 	 * archivos
+	 * Sistema Deisa : Consulta informacion al seleccionar una orden
 	 */
 	@ApiOperation("Obtiene datos generales de una orden")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
@@ -158,6 +114,7 @@ public class ContactsApi {
 
 	/*
 	 * Crea un registro
+	 * Sistema Deisa : Guarda o modifica infromacion
 	 */
 	@ApiOperation("Crea un registro QR")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
@@ -180,9 +137,10 @@ public class ContactsApi {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	@PostMapping(value = "/saveQrDocumentId")
 	public ResponseDTO saveQrDocumentId(@RequestPart("file") MultipartFile file, @RequestPart("id") String id,
-			@RequestPart("extension") String extension, @RequestPart("tipo") String tipo) {
+			@RequestPart("id") String user, @RequestPart("extension") String extension,
+			@RequestPart("tipo") String tipo) {
 		System.out.println("saveQrDocumentId");
-		return documentService.saveQrDocumentId(file, id, extension);
+		return documentService.saveQrDocumentId(file, id, extension, user);
 	}
 
 	/*
@@ -237,9 +195,71 @@ public class ContactsApi {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	@PostMapping(value = "/getValidaContrasenia")
 	public ResponseDTO getQrDocumentGeneralId(@RequestParam("id") String id,
-			@RequestParam("contrasenia") String contrasenia) {
+			@RequestParam("contrasenia") String contrasenia, @RequestParam("usuario") String user,
+			@RequestParam("numero") String order) {
 		System.out.println("getValidaContrasenia");
-		return documentService.getValidaContrasenia(id, contrasenia);
+		return documentService.getValidaContrasenia(id, contrasenia, user, order);
 	}
 
+	/*
+	 * Cambiar contraseña
+	 */
+	@ApiOperation("Envia correo")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@PostMapping(value = "/sendEmail")
+	public ResponseDTO sendEmail(@RequestBody final Email email) {
+		System.out.println("sendEmail");
+		return documentService.sendEmail(email);
+	}
+	
+	/*
+	 * Cambiar contraseña
+	 */
+	@ApiOperation("Aumenta descargas ")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@PostMapping(value = "/addDownloads")
+	public ResponseDTO addDownloads(@RequestBody final QrDocument qrDocument) {
+		System.out.println("addDownloads");
+		return documentService.addDownloads(qrDocument);
+	}
+	
+	/*
+	 * Cambiar contraseña
+	 */
+	@ApiOperation("Obtiene permisos")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@PostMapping(value = "/getPermissions")
+	public ResponseDTO getPermissions() {
+		System.out.println("getPermissions");
+		return documentService.getPermissions();
+	}
+	
+	
+//	@PostMapping("/send-email")
+//    public String sendEmail() {
+//        try {
+//            // Obtener los datos del correo electrónico desde el objeto EmailRequest
+////            String to = "ae_ivan@hotmail.com";
+////            String subject = "Asunto de prueba";
+////            String text = "Texto de prueba";
+////            EmailSender emailSender = new EmailSender(); 
+////            // Enviar el correo electrónico
+////            emailSender.sendEmail(to, subject, text);
+//
+//            return "Correo electrónico enviado correctamente";
+//        } catch (Exception e) {
+//            return "Error al enviar el correo electrónico: " + e.getMessage();
+//        }
+//    }
+	
+	
 }

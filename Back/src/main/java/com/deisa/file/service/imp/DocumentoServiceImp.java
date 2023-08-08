@@ -16,6 +16,7 @@ import com.deisa.file.dao.QrDocumentGeneralDao;
 import com.deisa.file.dao.QrDocumentDao;
 import com.deisa.file.dao.imp.InformationDocumentDaoImp;
 import com.deisa.file.dto.Documento;
+import com.deisa.file.dto.Email;
 import com.deisa.file.dto.InformationDocuments;
 import com.deisa.file.dto.QrDocumentGeneral;
 import com.deisa.file.dto.ResponseDTO;
@@ -34,9 +35,9 @@ public class DocumentoServiceImp implements DocumentService {
 // 	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\" ; 
 // 	String diagonal = "\\"; 
 
-	String urlBase = "http://localhost:8080/" ;
- 	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\" ; 
- 	String diagonal = "\\"; 
+	String urlBase = "http://localhost:8080/";
+	String dirPathBase = "C:\\Users\\ae_iv\\Desktop\\prueba\\Deisa\\";
+	String diagonal = "\\";
 
 //	String urlBase = "http://reportesdeisa.ddns.net:8081/";
 //	String dirPathBase = "/home/server/Documents/Deisa/";
@@ -150,7 +151,7 @@ public class DocumentoServiceImp implements DocumentService {
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
@@ -202,7 +203,7 @@ public class DocumentoServiceImp implements DocumentService {
 	public byte[] downLoadDocument(String id) {
 		byte[] file = null;
 		try {
-			documentServiceBo.downLoadDocument(id);
+			file = documentServiceBo.downLoadDocument(id);
 		} catch (Exception e) {
 			file = null;
 		}
@@ -218,21 +219,21 @@ public class DocumentoServiceImp implements DocumentService {
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
 
-	public ResponseDTO saveQrDocumentId(MultipartFile file, String id, String extension) {
+	public ResponseDTO saveQrDocumentId(MultipartFile file, String id, String extension, String user) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			responseDTO.setMsg("Ok");
-			responseDTO.setBody(documentServiceBo.saveQrDocumentId(file, id, extension));
+			responseDTO.setBody(documentServiceBo.saveQrDocumentId(file, id, extension, user));
 			responseDTO.setStatus(true);
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
@@ -246,7 +247,7 @@ public class DocumentoServiceImp implements DocumentService {
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
@@ -260,7 +261,7 @@ public class DocumentoServiceImp implements DocumentService {
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
@@ -274,21 +275,64 @@ public class DocumentoServiceImp implements DocumentService {
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
-			responseDTO.setStatus(true);
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}
 
-	public ResponseDTO getValidaContrasenia(String id, String contrasenia) {
+	public ResponseDTO getValidaContrasenia(String id, String contrasenia, String user, String order) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			responseDTO.setMsg("Ok");
-			responseDTO.setBody(documentServiceBo.getValidaContrasenia(id, contrasenia));
+			responseDTO.setBody(documentServiceBo.getValidaContrasenia(id, contrasenia,user, order));
 			responseDTO.setStatus(true);
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");
 			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+
+	@Override
+	public ResponseDTO sendEmail(Email email) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.sendEmail(email));
 			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO addDownloads (QrDocument qrDocument) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.addDownloads(qrDocument));
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO getPermissions () {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.getPermissions());
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
 		}
 		return responseDTO;
 	}

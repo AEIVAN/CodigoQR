@@ -35,11 +35,11 @@ export class ApiServiceService {
     console.log("getInformation " + id);
     return this.http.post<ResponseDTO>(this.baseURL+'/file/getQrDocumentGeneralId?id='+id, {headers:this.headers})
   }
-  validaContrasenia(id:String,contrasenia:String):Observable<ResponseDTO> {
+  validaContrasenia(id:String,contrasenia:String,usuario:String, numero:String):Observable<ResponseDTO> {
     console.log("getInformation " + id);
     console.log("contrasenia " + contrasenia);
     const headerss = { 'content-type': 'application/json'}  
     //return this.http.get(this.baseURL + 'test?tes='+id, {'headers':headers})
-    return this.http.post<ResponseDTO>(this.baseURL + '/file/getValidaContrasenia?id='+id+'&contrasenia='+contrasenia, {headers:headerss})
+    return this.http.post<ResponseDTO>(this.baseURL + '/file/getValidaContrasenia?id='+id+'&contrasenia='+contrasenia+'&usuario='+usuario+'&numero='+numero, {headers:headerss})
   }
 }

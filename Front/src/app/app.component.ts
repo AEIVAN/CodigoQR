@@ -112,16 +112,21 @@ export class AppComponent implements OnInit {
       return
     }
     this.flagDescarga = true ; 
-    this.apiService.validaContrasenia(this.idSeleccionado, this.contraseniaFormGroup.controls['contrasenia'].value.toString()).subscribe(
+    this.apiService.validaContrasenia(this.idSeleccionado, this.contraseniaFormGroup.controls['contrasenia'].value.toString(),"WEB Cliente",this.numero).subscribe(
       data => {
         if (data.body) {
-          if (!data.body.toString().includes("Invalido")){
+          if (data.body.toString().includes("Valido")){
             this.contrasenia = true ; 
             //console.log(this.exampleModalCenter.nativeElement);
             this.descargar(this.idSeleccionado); 
           }
-          else{
+          else if (data.body.toString().includes("Invalido")){
             this.errorContrasenia = "La contraseña no es valida"; 
+            this.contraseniaFormGroup.controls['contrasenia'].setValue("");
+            this.contraseniaFormGroup.markAllAsTouched();
+            this.flagDescarga = false ; 
+          }else if (data.body.toString().includes("Descargas")){
+            this.errorContrasenia = "No se tienen descargas disponibles"; 
             this.contraseniaFormGroup.controls['contrasenia'].setValue("");
             this.contraseniaFormGroup.markAllAsTouched();
             this.flagDescarga = false ; 

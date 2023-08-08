@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    _baseURL: "http://localhost:8084",
+    _baseURL: "http://reportesdeisa.ddns.net:8081/qr",
   };

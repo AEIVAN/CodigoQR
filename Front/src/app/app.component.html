@@ -131,11 +131,12 @@
           <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
           <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
           <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img class="d-block "
-              src="assets/slider1.jpeg"
+              src="assets/slider1.jpg"
               alt="First slide">
             <!--div class="carousel-caption carousel-back">
               <h5>Imagen 1</h5>
@@ -146,7 +147,7 @@
           </div>
           <div class="carousel-item">
             <img class="d-block "
-            src="assets/slider2.jpeg" 
+            src="assets/slider2.jpg" 
               alt="Second slide">
             <!--div class="carousel-caption d-none d-md-block">
               <h5>Imagen 1</h5>
@@ -157,8 +158,14 @@
           </div>
           <div class="carousel-item">
             <img class="d-block "
-            src="assets/slider3.jpeg"
+            src="assets/slider3.jpg"
             alt="Third slide">
+
+          </div>
+          <div class="carousel-item">
+            <img class="d-block "
+            src="assets/slider4.jpg"
+            alt="Fourth slide">
 
           </div>
         </div>
@@ -179,7 +186,9 @@
   <div class="row justify-content-center mt-5">
     <div class="col col-sm-8 col-md-8 col-lg-8 ">
       <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Fdeisacv%2Fvideos%2F187701797401472%2F&show_text=false&width=476&t=0" width="476" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" allowfullscreen></iframe>
+        <!--iframe class="embed-responsive-item" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Fdeisacv%2Fvideos%2F187701797401472%2F&show_text=false&width=476&t=0" width="476" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" allowfullscreen></iframe!-->
+        
+        <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fdeisacv%2Fvideos%2F1280035246246319%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
       </div>
     </div>
   </div>
@@ -324,7 +333,7 @@
       <div class="modal-body">
         <form [formGroup]="contraseniaFormGroup">
           <mat-form-field appearance="fill">
-            <input matInput oninput="this-value" placeholder="Contraeña" formControlName="contrasenia" maxlength="4"
+            <input matInput oninput="this-value" placeholder="Contraseña" formControlName="contrasenia" maxlength="4"
               type="password" required />
             <mat-error>{{getErrorMessage()}}</mat-error>
           </mat-form-field>
