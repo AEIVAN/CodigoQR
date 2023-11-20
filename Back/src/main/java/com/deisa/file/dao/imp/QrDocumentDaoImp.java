@@ -144,8 +144,7 @@ public class QrDocumentDaoImp implements QrDocumentDao {
 
 		SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, params);
 		while (rs.next()) {
-			System.out.println("rs.getNString(\"Nombre\")" + rs.getString("Nombre"));
-			return rs.getString("Nombre");
+			return rs.getString("Cuenta");
 		}
 		return "";
 	}
@@ -183,6 +182,22 @@ public class QrDocumentDaoImp implements QrDocumentDao {
 		} catch (Exception e) {
 			System.out.println("Exception " + e.getMessage());
 			return false;
+		}
+	}
+	
+	
+	public List<LogRecordDTO> getHistoricalLog(String idQr) throws Exception{
+		System.out.println("getHistoricalLog");
+		String sql = "SELECT registro, idQr, orden, fecha AS fecha_registro, usuario, accion, request FROM log_registro  WHERE idQr = ? ";
+		Object[] params = { idQr };
+		List<LogRecordDTO> response = new ArrayList<>(); 
+		try {
+			response =  jdbcTemplate.query(sql, params,new BeanPropertyRowMapper<LogRecordDTO>(LogRecordDTO.class)); 
+			return response ; 
+		}
+		catch (Exception e) {
+			System.out.println("Exception " + e.getMessage());
+			return response;
 		}
 	}
 }

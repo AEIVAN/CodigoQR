@@ -9,4 +9,9 @@ public interface SingService {
 	public ResponseDTO test(String test) ; 
 	
 	public ResponseDTO singTest() ; 
+	
+	public ResponseDTO keyPairGenerator (); 
+	
+	public ResponseDTO digitalSignature (); 
+	public ResponseDTO verifySignature (String firma); 
 }

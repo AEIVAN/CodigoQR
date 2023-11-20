@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -328,6 +329,59 @@ public class DocumentoServiceImp implements DocumentService {
 		try {
 			responseDTO.setMsg("Ok");
 			responseDTO.setBody(documentServiceBo.getPermissions());
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO getHistorical (String idQr, String numero) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.getHistorical(idQr, numero));
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO getHistoricalPermission (String idQr, String numero) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.getHistoricalPermission(idQr, numero));
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	
+	
+//	 @Scheduled(cron = "0 * * * * *") // Se ejecutará cada  minuto
+//	@Scheduled(cron = "0 0 * * 1") // Se ejecutará todos los lunes a las 12:00 AM (hora del sistema)
+//	@Scheduled(cron = "0 15 7 * * 1")
+    public void executeSendWeeklyReport() {
+		System.out.println("Se ejecuto la tarea");
+		sendWeeklyReport();
+    }
+	
+	
+	public ResponseDTO sendWeeklyReport () {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(documentServiceBo.sendWeeklyReport());
 			responseDTO.setStatus(true);
 		} catch (Exception e) {
 			responseDTO.setMsg("Error");

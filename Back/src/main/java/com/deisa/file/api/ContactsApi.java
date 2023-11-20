@@ -137,7 +137,7 @@ public class ContactsApi {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	@PostMapping(value = "/saveQrDocumentId")
 	public ResponseDTO saveQrDocumentId(@RequestPart("file") MultipartFile file, @RequestPart("id") String id,
-			@RequestPart("id") String user, @RequestPart("extension") String extension,
+			@RequestPart("user") String user, @RequestPart("extension") String extension,
 			@RequestPart("tipo") String tipo) {
 		System.out.println("saveQrDocumentId");
 		return documentService.saveQrDocumentId(file, id, extension, user);
@@ -242,6 +242,43 @@ public class ContactsApi {
 		System.out.println("getPermissions");
 		return documentService.getPermissions();
 	}
+	
+	/*
+	 * Cambiar contraseña
+	 */
+	@ApiOperation("Obtiene el historial de la orden")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@PostMapping(value = "/getHistorical")
+	public ResponseDTO getHistorical(@RequestParam("idQr") String idQr, @RequestParam("numero") String numero) {
+		System.out.println("getHistorical");
+		return documentService.getHistorical(idQr, numero);
+	}
+	
+	@ApiOperation("Obtiene el historial de la orden")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@PostMapping(value = "/getHistoricalPermission")
+	public ResponseDTO getHistoricalPermission(@RequestParam("idQr") String idQr, @RequestParam("numero") String numero) {
+		System.out.println("getHistorical");
+		return documentService.getHistoricalPermission(idQr, numero);
+	}
+	
+	@ApiOperation("Manda el reporte semanal")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@GetMapping(value = "/sendWeeklyReport")
+	public ResponseDTO sendWeeklyReport() {
+		System.out.println("sendWeeklyReport");
+		return documentService.sendWeeklyReport();
+	}
+	
 	
 	
 //	@PostMapping("/send-email")

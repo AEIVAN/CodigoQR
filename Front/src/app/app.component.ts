@@ -40,6 +40,12 @@ export class AppComponent implements OnInit {
   public flagDescarga = false ; 
 
   columnas: string[] = ['nombre', 'tipo', 'fecha','qr'];
+  imagen1: String ="assets/Normal/"; 
+  imagen2: String ="assets/Normal/"; 
+
+  sabias1: String ="assets/Sabias_que/"; 
+  sabias2: String ="assets/Sabias_que/"; 
+
 
 
 
@@ -67,6 +73,19 @@ export class AppComponent implements OnInit {
     this.tipo = "";
     this.descargaDocumento = "";
     this.descargaId = "";
+
+    let min = 1;
+    let max = 33;
+    this.imagen1 = this.imagen1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    this.imagen2 = this.imagen2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    //this.imagen1 = this.imagen1+ "Imagen35" + ".jpg" ; 
+    //this.imagen2 = this.imagen2+ "Imagen34" + ".jpg" ; 
+    min = 1 ; 
+    max = 9 ; 
+    this.sabias1 = this.sabias1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    //this.sabias1 = this.sabias1+ "Imagen33" + ".jpg" ; 
+    this.sabias2 = this.sabias2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    console.log("---------------------->" + this.sabias1);
 
   }
 

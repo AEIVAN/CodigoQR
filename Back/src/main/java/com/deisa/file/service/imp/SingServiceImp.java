@@ -43,5 +43,52 @@ public class SingServiceImp implements SingService{
 		}
 		return responseDTO;
 	}
-
+	
+	@Override
+	public ResponseDTO keyPairGenerator() {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(firmaServiceBo.keyPairGenerator());
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO digitalSignature() {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(firmaServiceBo.digitalSignature());
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	public ResponseDTO verifySignature(String firma) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		try {
+			responseDTO.setMsg("Ok");
+			responseDTO.setBody(firmaServiceBo.verifySignature(firma));
+			responseDTO.setStatus(true);
+		} catch (Exception e) {
+			responseDTO.setMsg("Error");
+			responseDTO.setBody(e.getMessage());
+			responseDTO.setStatus(false);
+		}
+		return responseDTO;
+	}
+	
+	
+	
+	
+	
 }

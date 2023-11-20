@@ -1,5 +1,8 @@
 package com.deisa.file.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QrDocument {
 	private String id;
 	private String tipo;
@@ -17,6 +20,7 @@ public class QrDocument {
 	private String contrasenia;
 	private String estado;
 	private String fecha;
+	private List<LogRecordDTO> logRecordDTO ; 
 
 	public String getId() {
 		return id;
@@ -145,18 +149,29 @@ public class QrDocument {
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
+	
+	public List<LogRecordDTO> getLogRecordDTO() {
+		return logRecordDTO;
+	}
+
+	public void setLogRecordDTO(List<LogRecordDTO> logRecordDTO) {
+		this.logRecordDTO = logRecordDTO;
+	}
+
+	
 
 	@Override
 	public String toString() {
 		return "QrDocument [id=" + id + ", tipo=" + tipo + ", departamento=" + departamento + ", documento=" + documento
 				+ ", numero=" + numero + ", razonSocial=" + razonSocial + ", nombre=" + nombre + ", extension="
 				+ extension + ", qr=" + qr + ", file=" + file + ", url=" + url + ", usuario=" + usuario + ", descargar="
-				+ descargar + ", contrasenia=" + contrasenia + ", estado=" + estado + ", fecha=" + fecha + "]";
+				+ descargar + ", contrasenia=" + contrasenia + ", estado=" + estado + ", fecha=" + fecha
+				+ ", logRecordDTO=" + logRecordDTO + "]";
 	}
 
 	public QrDocument(String id, String tipo, String departamento, String documento, String numero, String razonSocial,
 			String nombre, String extension, String qr, String file, String url, String usuario, int descargar,
-			String contrasenia, String estado, String fecha) {
+			String contrasenia, String estado, String fecha, List<LogRecordDTO> logRecordDTO) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -174,6 +189,7 @@ public class QrDocument {
 		this.contrasenia = contrasenia;
 		this.estado = estado;
 		this.fecha = fecha;
+		this.logRecordDTO = logRecordDTO;
 	}
 
 	public QrDocument() {
@@ -194,6 +210,11 @@ public class QrDocument {
 		this.contrasenia = "";
 		this.estado = "";
 		this.fecha = "";
+		this.logRecordDTO = new ArrayList<>(); 
 	}
+
+	
+	
+	
 
 }

@@ -50,4 +50,35 @@ public class FirmaApi {
 	}
 	
 	
+	@ApiOperation("KeyPairGenerator")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@GetMapping(value = "/KeyPairGenerator")
+	public ResponseDTO keyPairGenerator() {
+		return singService.keyPairGenerator();
+	}
+	
+	@ApiOperation("DigitalSignature")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@GetMapping(value = "/DigitalSignature")
+	public ResponseDTO digitalSignature() {
+		return singService.digitalSignature();
+	}
+	
+	@ApiOperation("VerifySignature")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Invalid ID supplied"),
+			@ApiResponse(code = 404, message = "Customer not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@GetMapping(value = "/VerifySignature")
+	public ResponseDTO verifySignature(@RequestParam String firma ) {
+		return singService.verifySignature(firma);
+	}
+	
+	
 }

@@ -1,6 +1,7 @@
 package com.deisa.file.service;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.deisa.file.dto.Documento;
@@ -32,4 +33,9 @@ public interface DocumentService {
 	public ResponseDTO addDownloads (QrDocument qrDocument) ; 
 
 	public ResponseDTO getPermissions () ; 
+	
+	public ResponseDTO getHistorical (String idQr, String numero) ; 
+	public ResponseDTO getHistoricalPermission (String idQr, String numero) ; 
+	
+	public ResponseDTO sendWeeklyReport () ; 
 }

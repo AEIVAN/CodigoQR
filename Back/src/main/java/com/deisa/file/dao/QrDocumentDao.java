@@ -25,4 +25,5 @@ public interface QrDocumentDao {
 	public boolean changePassword(Email email) throws Exception; 
 	public boolean insertLog(LogRecordDTO logRecordDTO) throws Exception;
 	public boolean updateDownloads(QrDocument qrDocument) throws Exception;
+	public List<LogRecordDTO> getHistoricalLog(String idQr) throws Exception;
 }

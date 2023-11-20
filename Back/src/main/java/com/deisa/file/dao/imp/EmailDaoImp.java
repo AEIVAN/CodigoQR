@@ -1,6 +1,7 @@
 package com.deisa.file.dao.imp;
 
 import java.io.File;
+import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
@@ -63,7 +64,7 @@ public class EmailDaoImp implements EmailDao {
 					+ "</html>" ; 
 			// Origen
 			//helper.setFrom("amesivan93@gmail.com");
-			helper.setFrom("sistemadeisa@deisacv.com");
+			helper.setFrom("reportesdeisa@deisacv.com");
 			// Destinos
 			helper.setTo(emails);
 			// Asunto
@@ -73,6 +74,75 @@ public class EmailDaoImp implements EmailDao {
 			// Adjuntos
 			FileSystemResource resource = new FileSystemResource(new File(rutaImagen));
 			helper.addInline("logoDeisa", resource);
+			// Enviar correo
+			mail.send(message);
+			return body;
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+
+	}
+	
+	public String emailWeeklyReport(String[] emails, List<String[]> rows, String rows_start, String rows_end ) {
+		String rutaImagen = "";
+		try {
+			MimeMessage message = mail.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, CharEncoding.UTF_8);
+			rutaImagen = getClass().getResource("/assets/LOGO_DEISA.jpg").getPath();
+			String filas = "" ; 
+			String filaBase = "<tr>"
+					+ "		        <td>X</td>"
+					+ "		        <td>Y</td>"
+					+ "		    </tr>"
+					+ " "; 
+			
+			for (String[] row : rows) {
+				filas = filas + filaBase.replace("X", row[0]).replace("Y", row[1]); 
+			}
+			
+			String body = "<!DOCTYPE html>"
+					+ "<html>"
+					+ "	<style>"
+					+ "        table {"
+					+ "            border-collapse: collapse;"
+					+ "            width: 50%;"
+					+ "        }"
+					+ "        "
+					+ "        th, td {"
+					+ "            border: 1px solid black;"
+					+ "            padding: 8px;"
+					+ "            text-align: left;"
+					+ "        }"
+					+ "        "
+					+ "        th {"
+					+ "            background-color: #f2f2f2;"
+					+ "        }"
+					+ "    </style>"
+					+ "	<body>"
+					+ "		<p>"
+					+ "			Cantidad reportes con Codig Qr generados desde el dia "+rows_end+" al "+rows_start+". "
+					+ "		</p>"
+					+ "		<table>"
+					+ "			<tr>"
+					+ "		        <th>Categoría</th>"
+					+ "		        <th>Cantidad</th>"
+					+ "		    </tr>"
+					+ filas
+					+ "		</table>"
+					+ "		<h4>"
+					+ "			(Proyectos también carga reportes en Ambiente laboral)"
+					+ "		</h4>"
+					+ "	</body>"
+					+ "</html>" ; 
+			// Origen
+			//helper.setFrom("amesivan93@gmail.com");
+			helper.setFrom("reportesdeisa@deisacv.com");
+			// Destinos
+			helper.setTo(emails);
+			// Asunto
+			helper.setSubject("Reporte semanal de ordenes con Codigo Qr ");
+			// Cuerpo
+			helper.setText(body, true);
 			// Enviar correo
 			mail.send(message);
 			return body;
