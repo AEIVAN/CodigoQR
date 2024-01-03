@@ -11,11 +11,13 @@ import { MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { EncuestaComponent } from './encuesta/encuesta.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EncuestaComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +31,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatInputModule,
     MatProgressSpinnerModule,
     MatProgressBarModule
+  ],
+  entryComponents: [
+    AppComponent, // Esto es necesario en Angular 8 o anterior
   ],
   providers: [],
   bootstrap: [AppComponent]

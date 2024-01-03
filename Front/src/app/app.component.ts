@@ -7,6 +7,8 @@ import { QrDocumentSelected } from './modelo/QrDocumentSelected';
 import { ApiServiceService } from './servicio/api-service.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ResponseDTO } from './modelo/ResponseDTO';
+import { EncuestaComponent } from './encuesta/encuesta.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +40,7 @@ export class AppComponent implements OnInit {
   public contrasenia : Boolean = false; 
   public flagSpinner = false ; 
   public flagDescarga = false ; 
+  public isVisible: boolean = false;
 
   columnas: string[] = ['nombre', 'tipo', 'fecha','qr'];
   imagen1: String ="assets/Normal/"; 
@@ -52,10 +55,12 @@ export class AppComponent implements OnInit {
   constructor(
     private _formBuilder : FormBuilder,
     private _route: ActivatedRoute,
-    private apiService: ApiServiceService
+    private apiService: ApiServiceService,
+    private modalService: NgbModal
   ) {
   }
   ngOnInit(): void {
+
     this.result = false ; 
     this.flagSpinner = true ; 
 
@@ -76,16 +81,23 @@ export class AppComponent implements OnInit {
 
     let min = 1;
     let max = 33;
-    this.imagen1 = this.imagen1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
-    this.imagen2 = this.imagen2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
-    //this.imagen1 = this.imagen1+ "Imagen35" + ".jpg" ; 
-    //this.imagen2 = this.imagen2+ "Imagen34" + ".jpg" ; 
+    //this.imagen1 = this.imagen1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    //this.imagen2 = this.imagen2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    this.imagen1 = this.imagen1+ "Imagen0001" + ".jpg" ; 
+    this.imagen2 = this.imagen2+ "Imagen0002" + ".jpg" ; 
     min = 1 ; 
     max = 9 ; 
-    this.sabias1 = this.sabias1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
-    //this.sabias1 = this.sabias1+ "Imagen33" + ".jpg" ; 
-    this.sabias2 = this.sabias2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    //this.sabias1 = this.sabias1+ "Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    //this.sabias2 = this.sabias2 +"Imagen" + (Math.floor(Math.random() * (max - min + 1)) + min) + ".jpg" ; 
+    this.sabias1 = this.sabias1+ "Imagen001" + ".jpg" ; 
+    this.sabias2 = this.sabias2+ "Imagen002" + ".jpg" ; 
     console.log("---------------------->" + this.sabias1);
+    this.mostrarPopup();
+  }
+
+  mostrarPopup() {
+    // Abre un modal
+    const modalRef = this.modalService.open(EncuestaComponent);
 
   }
 
@@ -93,6 +105,8 @@ export class AppComponent implements OnInit {
 
 
   }
+
+  
   seleccionar(documento: Documento) {
     if (documento.extension == "pdf") {
       this.tipo = "pdf";
@@ -236,6 +250,7 @@ export class AppComponent implements OnInit {
           this.qrDocumentSelected.estado = element.estado;
           this.qrDocumentSelected.date = element.fecha; 
           this.qrDocumentSelectedList.push(this.qrDocumentSelected);
+          this.isVisible = true ; 
           //this.result = true;
           //setTimeout(() => {  this.flagSpinner = false ;  }, 1000); 
         });
